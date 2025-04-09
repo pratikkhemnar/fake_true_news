@@ -1,10 +1,11 @@
+import 'package:fake_true_news/screens/news_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'about_screen.dart';
 import 'history_screen.dart';
-import 'result_screen.dart'; // Import the ResultScreen
+import 'result_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,13 +17,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController newsController = TextEditingController();
   bool isLoading = false;
-  List<Map<String, String>> searchHistory = []; // List to store search history
+  List<Map<String, String>> searchHistory = [];
 
   Future<void> checkNews() async {
     String newsText = newsController.text.trim();
     if (newsText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter some news text!")),
+        const SnackBar(content: Text("Please enter some news text!")),
       );
       return;
     }
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      var url = Uri.parse("http://localhost:8080/predict/"); // FastAPI endpoint
+      var url = Uri.parse("http://localhost:8080/predict/");
       var response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -41,14 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        String prediction = data["prediction"]; // "Fake News" or "Not Fake News"
+        String prediction = data["prediction"];
 
-        // Add the search to history
         setState(() {
-          searchHistory.add({
-            "text": newsText,
-            "prediction": prediction,
-          });
+          searchHistory.insert(0, {"text": newsText, "prediction": prediction});
         });
 
         Navigator.push(
@@ -91,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(0xFF1D2671), Color(0xFFC33764)],
                 begin: Alignment.topCenter,
@@ -101,40 +98,47 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 50),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Image.asset(
+                    'assets/images/img2.png',
+                    height: 180,
+                  ),
+                  const SizedBox(height: 20.0),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.white38),
                     ),
                     child: TextField(
                       controller: newsController,
-                      maxLines: 5,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'Paste the news article....',
+                      maxLines: 4,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: 'Paste the news article...',
                         hintStyle: TextStyle(color: Colors.white70),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(12),
+                        contentPadding: EdgeInsets.all(15),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: isLoading ? null : checkNews,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white.withOpacity(0.3),
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       elevation: 6,
                     ),
                     child: isLoading
-                        ? CircularProgressIndicator(color: Colors.white)
+                        ? const CircularProgressIndicator(color: Colors.white)
                         : Text(
                       'Check News',
                       style: GoogleFonts.poppins(
@@ -144,9 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
-                  Divider(color: Colors.white30),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 20.0),
+                  const Divider(color: Colors.white30),
+                  const SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -154,15 +158,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         'View History',
                         Icons.history,
-                        HistoryScreen(history: searchHistory), // Pass history
+                        HistoryScreen(history: searchHistory),
                       ),
                       _buildTextButton(
                         context,
                         'About App',
                         Icons.info_outline,
-                        AboutScreen(),
+                        const AboutScreen(),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 10.0),
+                  _buildTextButton(
+                    context,
+                    'View News',
+                    Icons.article,
+                    const NewsScreen(),
                   ),
                 ],
               ),

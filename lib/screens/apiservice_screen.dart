@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = "http://192.168.0.108:8080"; // FastAPI URL
+  static const String baseUrl = "http://192.168.63.67:8080/predict/"; // FastAPI URL
 
   static Future<Map<String, dynamic>> predictNews(String newsText) async {
     final response = await http.post(
