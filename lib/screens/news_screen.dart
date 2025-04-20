@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData, rootBundle;
 import 'package:csv/csv.dart';
@@ -46,15 +45,19 @@ class _NewsScreenState extends State<NewsScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("News "),
+          title: const Text("News" ,style: TextStyle(color: Colors.black45 ,fontWeight: FontWeight.bold),),
           centerTitle: true,
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.blue.shade800,
           bottom: const TabBar(
+            labelColor: Colors.white,            // Color for the selected tab
+            unselectedLabelColor: Colors.white70, // Color for the unselected tabs
+            indicatorColor: Colors.amber,        // Color of the tab indicator line
             tabs: [
               Tab(text: "Fake News"),
               Tab(text: "True News"),
             ],
           ),
+
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -84,8 +87,9 @@ class _NewsScreenState extends State<NewsScreen> {
         return Card(
           elevation: 4,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
+          color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -93,9 +97,10 @@ class _NewsScreenState extends State<NewsScreen> {
               children: [
                 Text(
                   news[0], // Title
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: Colors.blueGrey.shade800,
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -103,7 +108,10 @@ class _NewsScreenState extends State<NewsScreen> {
                   news[1], // Description
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.blueGrey.shade600,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Row(
